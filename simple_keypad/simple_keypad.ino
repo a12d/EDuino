@@ -67,16 +67,24 @@ void setup() {
 
 void loop() {
   if (digitalRead(KEY_1) == LOW) {
-    //Keyboard.write(KEY_ESC);
+    //slowPrint(InterfacePanelUp);
+    //Keyboard.write(InterfacePanelUp);
+    Keyboard.press(InterfacePanelUp);
+    delay(100);
+    Keyboard.releaseAll();
   }
   else if (digitalRead(KEY_2) == LOW) {
     //Keyboard.write(UIPanelUp);
   }
-    else if (digitalRead(KEY_3) == LOW) {
+  else if (digitalRead(KEY_3) == LOW) {
     //Keyboard.write('3');
   }
-    else if (digitalRead(KEY_4) == LOW) {
-    //Keyboard.write(UIPanelLeft);
+  else if (digitalRead(KEY_4) == LOW) {
+    //slowPrint(InterfacePanelDown);
+    //Keyboard.write(InterfacePanelDown);
+    Keyboard.press(InterfacePanelDown);
+    delay(100);
+    Keyboard.releaseAll();
   }
     else if (digitalRead(KEY_5) == LOW) {
     //Keyboard.write(UIPanelSelect);
@@ -85,33 +93,39 @@ void loop() {
     //Keyboard.write(UIPanelRight);
   }
     else if (digitalRead(KEY_7) == LOW) {
-    //Keyboard.write('7');
+        digitalWrite(BUSY_LED, HIGH);
+        digitalWrite(RXLED, HIGH);
+        TXLED1;
+        acceptMission();
   }
     else if (digitalRead(KEY_8) == LOW) {
-    //Keyboard.write(UIPanelDown);
+        digitalWrite(BUSY_LED, HIGH);
+        digitalWrite(RXLED, HIGH);
+        TXLED1;
+        completeMission();
   }
     else if (digitalRead(KEY_9) == LOW) {
     //Keyboard.write('9');
   }
     else if (digitalRead(KEY_0) == LOW) {
-      digitalWrite(BUSY_LED, HIGH);
-          digitalWrite(RXLED, HIGH);
-    TXLED1;
-      requestDocking();
+        digitalWrite(BUSY_LED, HIGH);
+        digitalWrite(RXLED, HIGH);
+        TXLED1;
+        requestDocking();
   }
     else if (digitalRead(KEY_STAR) == LOW) {
-      digitalWrite(BUSY_LED, HIGH);
-          digitalWrite(RXLED, HIGH);
-    TXLED1;
-      refreshBBS();
+        digitalWrite(BUSY_LED, HIGH);
+        digitalWrite(RXLED, HIGH);
+        TXLED1;
+        refreshBBS();
   }
     else if (digitalRead(KEY_HASH) == LOW) {
-      digitalWrite(BUSY_LED, HIGH);
-          digitalWrite(RXLED, HIGH);
-    TXLED1;
-      updateMarketPrices();
+        digitalWrite(BUSY_LED, HIGH);
+        digitalWrite(RXLED, HIGH);
+        TXLED1;
+        updateMarketPrices();
   }
-  delay(200);
+  delay(50);
   digitalWrite(BUSY_LED, LOW);
   digitalWrite(RXLED, LOW);
   TXLED0;
@@ -138,9 +152,9 @@ void slowPrint(char* string, int keyPressTime = 100, int delayBetweenKeypress = 
 
 void refreshBBS() {
     char highlightQuit[6] = {InterfacePanelDown, InterfacePanelDown, InterfacePanelDown, InterfacePanelDown, InterfacePanelDown};
-    char selectYes[3] = {UIPanelRight, InterfacePanelSelect};
+    char selectYes[3] = {UIPanelRight, InterfacePanelSelect}; 
     char downThenSelect[3] = {InterfacePanelDown, InterfacePanelSelect};
-    char highlightSolo[3] = {InterfacePanelDown, InterfacePanelDown};
+    char highlightSolo[3] = {InterfacePanelDown, InterfacePanelDown}; 
     char selectString[2] = {InterfacePanelSelect};
     char selectBBS[5] = {InterfacePanelDown, InterfacePanelDown, InterfacePanelDown, InterfacePanelSelect};
 
@@ -157,9 +171,10 @@ void refreshBBS() {
   delay(1000);
   // yes, we're sure
   slowPrint(selectYes);
-  delay(3000);
+  delay(4000);
   // "start"
   slowPrint(downThenSelect);
+  delay(1000);
   //open/private/solo mode
   if (game_mode == OPEN){
     game_mode = PRIVATE;
@@ -194,10 +209,22 @@ void updateMarketPrices() {
 }
 
 void requestDocking() {
-   char dockingString[ ] = { TargetPanel, InterfacePanelRight, InterfacePanelRight, InterfacePanelSelect, InterfacePanelDown, InterfacePanelSelect, InterfacePanelPrevious, InterfacePanelPrevious, TargetPanel};
-   slowPrint(dockingString,100,100);
+   char dockingString[ ] = {TargetPanel, InterfacePanelRight, InterfacePanelRight, InterfacePanelSelect, InterfacePanelDown, InterfacePanelSelect, InterfacePanelPrevious, InterfacePanelPrevious, TargetPanel};
+   slowPrint(dockingString, 100, 100);
 }
 
+void acceptMission() {
+    char missionString[ ] = {InterfacePanelSelect, UIPanelRight, InterfacePanelSelect};
+    slowPrint(missionString);
+}
+
+void completeMission() {
+    char missionString[ ] = {InterfacePanelSelect, UIPanelRight, InterfacePanelSelect};
+    char selectString[2] = {InterfacePanelSelect};
+    slowPrint(missionString);
+    delay(1500);
+    slowPrint(selectString);
+}
 // void targetNearestStation() {
 // }
 
